@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: 'https://task-manager-lovat-three-40.vercel.app' }));
 
 
 app.use('/auth', authRoutes);

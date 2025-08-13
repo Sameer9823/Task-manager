@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import api from '../services/api';
-import Loader from './Loader';
-import TaskForm from './TaskForm';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import api from "../services/api";
+import Loader from "./Loader";
+import TaskForm from "./TaskForm";
 
 function Dashboard({ setIsAuthenticated }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState("");
   const [editingTask, setEditingTask] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
@@ -16,14 +16,16 @@ function Dashboard({ setIsAuthenticated }) {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/tasks${statusFilter ? `?status=${statusFilter}` : ''}`);
+      const response = await api.get(
+        `/tasks${statusFilter ? `?status=${statusFilter}` : ""}`
+      );
       setTasks(response.data);
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to fetch tasks');
+      toast.error(err.response?.data?.message || "Failed to fetch tasks");
       if (err.response?.status === 401 || err.response?.status === 403) {
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
         setIsAuthenticated(false);
-        navigate('/login', { replace: true });
+        navigate("/login", { replace: true });
       }
     } finally {
       setLoading(false);
@@ -35,14 +37,14 @@ function Dashboard({ setIsAuthenticated }) {
   }, [statusFilter]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this task?')) return;
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
     setLoading(true);
     try {
       await api.delete(`/tasks/${id}`);
-      toast.success('Task deleted successfully!');
+      toast.success("Task deleted successfully!");
       fetchTasks();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to delete task');
+      toast.error(err.response?.data?.message || "Failed to delete task");
     } finally {
       setLoading(false);
     }
@@ -60,16 +62,16 @@ function Dashboard({ setIsAuthenticated }) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false); // ✅ update auth state in App
-    toast.info('Logged out successfully');
-    navigate('/login', { replace: true });
+    localStorage.removeItem("token");
+    setIsAuthenticated(false); 
+    toast.info("Logged out successfully");
+    navigate("/login", { replace: true });
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
+      
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-blue-400">Task Manager</h1>
           <button
@@ -80,39 +82,38 @@ function Dashboard({ setIsAuthenticated }) {
           </button>
         </div>
 
-        {/* Filters & Add */}
+     
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
-  {/* Filter Buttons */}
-  <div className="flex flex-wrap gap-2">
-    {['', 'Pending', 'In Progress', 'Completed'].map((status) => (
-      <button
-        key={status || 'all'}
-        onClick={() => setStatusFilter(status)}
-        className={`px-4 py-2 rounded-md text-sm sm:text-base ${
-          statusFilter === status
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-700 text-gray-300 hover:bg-blue-500 hover:text-white'
-        } transition`}
-      >
-        {status || 'All'}
-      </button>
-    ))}
-  </div>
+         
+          <div className="flex flex-wrap gap-2">
+            {["", "Pending", "In Progress", "Completed"].map((status) => (
+              <button
+                key={status || "all"}
+                onClick={() => setStatusFilter(status)}
+                className={`px-4 py-2 rounded-md text-sm sm:text-base ${
+                  statusFilter === status
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-700 text-gray-300 hover:bg-blue-500 hover:text-white"
+                } transition`}
+              >
+                {status || "All"}
+              </button>
+            ))}
+          </div>
 
-  {/* Add Task Button */}
-  <button
-    onClick={() => {
-      setEditingTask(null);
-      setShowForm(true);
-    }}
-    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition w-full sm:w-auto text-sm sm:text-base"
-  >
-    Add Task
-  </button>
-</div>
+      
+          <button
+            onClick={() => {
+              setEditingTask(null);
+              setShowForm(true);
+            }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition w-full sm:w-auto text-sm sm:text-base"
+          >
+            Add Task
+          </button>
+        </div>
 
-
-        {/* Task Form */}
+      
         {showForm && (
           <TaskForm
             task={editingTask}
@@ -121,7 +122,7 @@ function Dashboard({ setIsAuthenticated }) {
           />
         )}
 
-        {/* Task List */}
+  
         {loading ? (
           <div className="flex justify-center my-8">
             <Loader />
@@ -135,7 +136,9 @@ function Dashboard({ setIsAuthenticated }) {
                 key={task.id}
                 className="bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition"
               >
-                <h3 className="text-lg font-semibold text-white">{task.title}</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  {task.title}
+                </h3>
                 <p className="text-gray-400 mt-1">{task.description}</p>
                 <p className="text-sm text-gray-500 mt-2">
                   Status: <span className="font-medium">{task.status}</span>
